@@ -2,13 +2,19 @@
   "name": "playwright-2026",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "auth:refresh": "node -e \"const fs=require('fs');const p='tests/eventhub-auth.state.json';if(fs.existsSync(p)){fs.unlinkSync(p);console.log('Removed',p)}else{console.log('No state file to remove')}\"",
+    "auth:init": "npm run auth:refresh && npm test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.3"
+    "@playwright/cli": "^0.1.6",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.3.3",
+    "dotenv": "^10.0.0"
   }
 }
