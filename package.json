@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test",
-    "auth:refresh": "node -e \"const fs=require('fs');const p='tests/eventhub-auth.state.json';if(fs.existsSync(p)){fs.unlinkSync(p);console.log('Removed',p)}else{console.log('No state file to remove')}\"",
-    "auth:init": "npm run auth:refresh && npm test"
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:headed": "playwright test --headed --project=chromium",
+    "auth:refresh": "node -e \"const fs=require('fs');const p='playwright/.auth/user.json';if(fs.existsSync(p)){fs.unlinkSync(p);console.log('Removed',p)}else{console.log('No state file to remove')}\"",
+    "auth:init": "playwright test tests/setup/auth.setup.js --project=setup",
+    "report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
