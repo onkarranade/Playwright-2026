@@ -3,6 +3,8 @@ import { featuredEvent } from '../../test-data/events.js';
 import { createBookingDetails } from '../../utils/booking.js';
 
 test.describe('Booking flow', () => {
+  test.describe.configure({ mode: 'serial' });
+
   test.beforeEach(async ({ bookingsPage }) => {
     await bookingsPage.visit();
     await bookingsPage.clearAllBookingsIfPresent();
@@ -60,5 +62,34 @@ test.describe('Booking flow', () => {
     await bookingsPage.expectBookingCancelled();
     await expect(bookingsPage.noBookingsHeading).toBeVisible();
     await bookingsPage.expectBookingNotVisible(featuredEvent.name);
+  });
+
+  test('@regression @p1 ticket quantity updates the total price', async ({
+    eventsPage,
+    eventDetailsPage,
+  }) => {
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.expectLoaded(featuredEvent.name);
+
+    await eventDetailsPage.increaseTicketQuantity();
+
+    await eventDetailsPage.expectTicketSummary(2, featuredEvent.totalForTwoTickets);
+  });
+
+  test('@regression @p1 required booking fields block empty submission', async ({
+    eventsPage,
+    eventDetailsPage,
+    page,
+  }) => {
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.expectLoaded(featuredEvent.name);
+
+    await eventDetailsPage.confirmBooking();
+
+    await expect(page).toHaveURL(/\/events\/1$/);
+    await expect(eventDetailsPage.confirmationHeading).toHaveCount(0);
+    await eventDetailsPage.expectRequiredFieldValidation();
   });
 });

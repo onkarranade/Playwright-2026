@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/test-base.js';
-import { featuredEvent, searchMissQuery } from '../../test-data/events.js';
+import { featuredEvent, nonMatchingFilteredEvent, searchMissQuery } from '../../test-data/events.js';
 import { users } from '../../test-data/users.js';
 
 test.describe('Event browsing', () => {
@@ -29,5 +29,23 @@ test.describe('Event browsing', () => {
 
     await expect(eventsPage.noEventsHeading).toBeVisible();
     await expect(eventsPage.noEventsDescription).toBeVisible();
+  });
+
+  test('@regression @p1 category and city filters narrow the event list', async ({ eventsPage }) => {
+    await eventsPage.visit();
+    await eventsPage.expectLoaded();
+
+    await eventsPage.filterBy(featuredEvent.category, featuredEvent.city);
+    await eventsPage.expectFiltersApplied(featuredEvent.category, featuredEvent.city);
+
+    await expect(eventsPage.eventCard(featuredEvent.name)).toBeVisible();
+    await expect(eventsPage.eventCard(nonMatchingFilteredEvent.name)).toHaveCount(0);
+  });
+
+  test('@regression @p1 featured event card shows key metadata', async ({ eventsPage }) => {
+    await eventsPage.visit();
+    await eventsPage.expectLoaded();
+
+    await eventsPage.expectCardSummary(featuredEvent);
   });
 });

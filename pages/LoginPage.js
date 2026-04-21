@@ -7,6 +7,7 @@ export class LoginPage {
     this.emailInput = page.getByLabel('Email');
     this.passwordInput = page.getByLabel('Password');
     this.signInButton = page.getByRole('button', { name: 'Sign In' });
+    this.registerLink = page.getByRole('link', { name: 'Register' });
     this.invalidCredentialsToast = page.getByText('Invalid email or password');
   }
 
@@ -22,5 +23,9 @@ export class LoginPage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
     await this.signInButton.click();
+  }
+
+  async openRegister() {
+    await this.registerLink.click();
   }
 }

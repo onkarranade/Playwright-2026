@@ -124,3 +124,9 @@ npm run auth:init
 - Use `@smoke` for the fastest confidence checks.
 - Use `@regression` for the broader local run.
 - Parallel execution is enabled at the file level; keep data-mutating scenarios isolated and self-cleaning.
+
+## 8. Implemented P1 Coverage
+
+- Authentication: register link navigation is covered in `tests/auth/login.spec.js`.
+- Events: filter narrowing and featured-card metadata are covered in `tests/events/events-browse.spec.js`.
+- Booking: two-ticket total recalculation and empty-form blocking are covered in `tests/booking/booking-flow.spec.js`.

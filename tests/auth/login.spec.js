@@ -22,4 +22,14 @@ test.describe('Authentication', () => {
     await expect(loginPage.invalidCredentialsToast).toBeVisible();
     await expect(loginPage.invalidCredentialsToast).toHaveText('Invalid email or password');
   });
+
+  test('@regression @p1 register link routes to the registration page', async ({ loginPage, page }) => {
+    await loginPage.visit();
+    await loginPage.expectLoaded();
+
+    await loginPage.openRegister();
+
+    await expect(page).toHaveURL(/\/register$/);
+    await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible();
+  });
 });
