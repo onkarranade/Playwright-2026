@@ -19,6 +19,8 @@
 | P0 | Valid user can sign in and reach the authenticated home page |
 | P0 | Invalid credentials show the "Invalid email or password" toast |
 | P1 | Register link routes to the registration page |
+| P2 | Protected routes redirect unauthenticated users to the login page |
+| P2 | Logout ends the session and returns the user to login |
 
 ### Events
 
@@ -28,6 +30,8 @@
 | P0 | Search with an unknown query shows the empty state |
 | P1 | Filter by category and city narrows the event list correctly |
 | P1 | Featured event card shows price, date, and availability |
+| P2 | Clear filters resets the discovery view to default results |
+| P2 | Search and category filters work together correctly |
 
 ### Booking
 
@@ -37,6 +41,8 @@
 | P0 | User can clear bookings to reset test data |
 | P1 | Ticket quantity updates total price correctly |
 | P1 | Required booking fields prevent submission when incomplete |
+| P2 | Booking details page shows event, customer, and payment summary correctly |
+| P2 | Ticket quantity respects minimum and maximum bounds |
 
 ## 3. Framework Design
 
@@ -130,3 +136,9 @@ npm run auth:init
 - Authentication: register link navigation is covered in `tests/auth/login.spec.js`.
 - Events: filter narrowing and featured-card metadata are covered in `tests/events/events-browse.spec.js`.
 - Booking: two-ticket total recalculation and empty-form blocking are covered in `tests/booking/booking-flow.spec.js`.
+
+## 9. Implemented P2 Coverage
+
+- Authentication: logout and unauthenticated route guards are covered in `tests/auth/login.spec.js`.
+- Events: clear-filters reset and search-plus-filter behavior are covered in `tests/events/events-browse.spec.js`.
+- Booking: booking-details summary assertions and min/max ticket boundaries are covered in `tests/booking/booking-flow.spec.js`.

@@ -30,8 +30,13 @@ export class EventsPage {
   }
 
   async filterBy(category, city) {
-    await this.categoryFilter.selectOption(category);
-    await this.cityFilter.selectOption(city);
+    if (category !== undefined) {
+      await this.categoryFilter.selectOption(category);
+    }
+
+    if (city !== undefined) {
+      await this.cityFilter.selectOption(city);
+    }
   }
 
   async expectFiltersApplied(category, city) {
@@ -48,6 +53,25 @@ export class EventsPage {
     await expect(card).toContainText(event.date);
     await expect(card).toContainText(event.price);
     await expect(card).toContainText(event.availability);
+  }
+
+  async clearFilters() {
+    await this.clearFiltersButton.click();
+  }
+
+  async expectFiltersCleared() {
+    await expect(this.categoryFilter).toHaveValue('');
+    await expect(this.cityFilter).toHaveValue('');
+    await expect(this.page).toHaveURL(/\/events$/);
+    await expect(this.clearFiltersButton).toHaveCount(0);
+  }
+
+  async expectSearchAndFilterApplied(query, category) {
+    await expect(this.searchInput).toHaveValue(query);
+    await expect(this.categoryFilter).toHaveValue(category);
+    await expect(this.page).toHaveURL(new RegExp(`search=${escapeForRegex(query)}`));
+    await expect(this.page).toHaveURL(new RegExp(`category=${escapeForRegex(category)}`));
+    await expect(this.clearFiltersButton).toBeVisible();
   }
 
   async openEvent(name) {

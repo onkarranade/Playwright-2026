@@ -48,4 +48,30 @@ test.describe('Event browsing', () => {
 
     await eventsPage.expectCardSummary(featuredEvent);
   });
+
+  test('@regression @p2 clear filters resets the event discovery view', async ({ eventsPage }) => {
+    await eventsPage.visit();
+    await eventsPage.expectLoaded();
+
+    await eventsPage.filterBy(featuredEvent.category, featuredEvent.city);
+    await eventsPage.expectFiltersApplied(featuredEvent.category, featuredEvent.city);
+
+    await eventsPage.clearFilters();
+    await eventsPage.expectFiltersCleared();
+
+    await expect(eventsPage.eventCard(featuredEvent.name)).toBeVisible();
+    await expect(eventsPage.eventCard(nonMatchingFilteredEvent.name)).toBeVisible();
+  });
+
+  test('@regression @p2 search and category filters work together', async ({ eventsPage }) => {
+    await eventsPage.visit();
+    await eventsPage.expectLoaded();
+
+    await eventsPage.searchFor(featuredEvent.searchQuery);
+    await eventsPage.filterBy(featuredEvent.category);
+    await eventsPage.expectSearchAndFilterApplied(featuredEvent.searchQuery, featuredEvent.category);
+
+    await expect(eventsPage.eventCard(featuredEvent.name)).toBeVisible();
+    await expect(eventsPage.eventCard(nonMatchingFilteredEvent.name)).toHaveCount(0);
+  });
 });

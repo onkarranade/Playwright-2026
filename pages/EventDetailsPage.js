@@ -4,6 +4,7 @@ export class EventDetailsPage {
   constructor(page) {
     this.page = page;
     this.bookTicketsHeading = page.getByRole('heading', { name: 'Book Tickets' });
+    this.decreaseTicketButton = page.getByRole('button', { name: '−' });
     this.increaseTicketButton = page.getByRole('button', { name: '+' });
     this.ticketCount = page.locator('div').filter({ has: page.getByText('Tickets') }).getByText(/^\d+$/);
     this.fullNameInput = page.getByLabel('Full Name*');
@@ -30,10 +31,38 @@ export class EventDetailsPage {
     await this.increaseTicketButton.click();
   }
 
+  async setTicketQuantity(quantity) {
+    const currentQuantity = Number(await this.ticketCount.textContent());
+    const difference = quantity - currentQuantity;
+
+    if (difference > 0) {
+      for (let count = 0; count < difference; count += 1) {
+        await this.increaseTicketButton.click();
+      }
+      return;
+    }
+
+    for (let count = 0; count < Math.abs(difference); count += 1) {
+      await this.decreaseTicketButton.click();
+    }
+  }
+
   async expectTicketSummary(quantity, total) {
     await expect(this.ticketCount).toHaveText(String(quantity));
     await expect(this.page.getByText(`$1,500 × ${quantity} ticket${quantity > 1 ? 's' : ''}`)).toBeVisible();
     await expect(this.totalRow).toContainText(total);
+  }
+
+  async expectQuantityControlsAtMin() {
+    await expect(this.ticketCount).toHaveText('1');
+    await expect(this.decreaseTicketButton).toBeDisabled();
+    await expect(this.increaseTicketButton).toBeEnabled();
+  }
+
+  async expectQuantityControlsAtMax() {
+    await expect(this.ticketCount).toHaveText('10');
+    await expect(this.increaseTicketButton).toBeDisabled();
+    await expect(this.decreaseTicketButton).toBeEnabled();
   }
 
   async confirmBooking() {

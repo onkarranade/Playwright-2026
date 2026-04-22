@@ -32,4 +32,24 @@ test.describe('Authentication', () => {
     await expect(page).toHaveURL(/\/register$/);
     await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible();
   });
+
+  test('@regression @p2 protected routes redirect unauthenticated users to login', async ({ loginPage, page }) => {
+    for (const route of ['/bookings', '/events']) {
+      await page.goto(route);
+      await expect(page).toHaveURL(/\/login$/);
+      await loginPage.expectLoaded();
+    }
+  });
+});
+
+test.describe('Session management', () => {
+  test('@regression @p2 logout returns the user to login', async ({ homePage, loginPage, page }) => {
+    await homePage.visit();
+    await homePage.expectLoaded();
+
+    await homePage.logout();
+
+    await expect(page).toHaveURL(/\/login$/);
+    await loginPage.expectLoaded();
+  });
 });

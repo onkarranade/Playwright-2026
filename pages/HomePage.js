@@ -7,6 +7,7 @@ export class HomePage {
     this.userEmail = page.getByTestId('user-email-display');
     this.browseEventsLink = page.getByRole('link', { name: 'Browse Events →' });
     this.myBookingsButton = page.getByRole('button', { name: 'My Bookings' });
+    this.logoutButton = page.getByRole('button', { name: 'Logout' });
   }
 
   async visit() {
@@ -28,5 +29,9 @@ export class HomePage {
 
   async openBookings() {
     await this.myBookingsButton.click();
+  }
+
+  async logout() {
+    await this.logoutButton.click();
   }
 }

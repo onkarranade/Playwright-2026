@@ -6,6 +6,8 @@ export const featuredEvent = {
   price: '$1,500',
   availability: '500 seats available',
   totalForTwoTickets: '$3,000',
+  totalForTenTickets: '$15,000',
+  searchQuery: 'World',
 };
 
 export const nonMatchingFilteredEvent = {

@@ -92,4 +92,48 @@ test.describe('Booking flow', () => {
     await expect(eventDetailsPage.confirmationHeading).toHaveCount(0);
     await eventDetailsPage.expectRequiredFieldValidation();
   });
+
+  test('@regression @p2 booking details show the event, customer, and payment summary', async ({
+    eventsPage,
+    eventDetailsPage,
+    bookingsPage,
+    bookingDetailsPage,
+  }) => {
+    const booking = createBookingDetails();
+
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.expectLoaded(featuredEvent.name);
+
+    await eventDetailsPage.fillBookingForm(booking);
+    await eventDetailsPage.confirmBooking();
+    await eventDetailsPage.expectBookingConfirmed(booking.fullName);
+
+    await eventDetailsPage.openMyBookings();
+    await bookingsPage.expectLoaded();
+    await bookingsPage.openBookingDetails(featuredEvent.name);
+    await bookingDetailsPage.expectLoaded(featuredEvent.name);
+    await bookingDetailsPage.expectBookingSummary(booking, featuredEvent);
+
+    await bookingsPage.visit();
+    await bookingsPage.clearAllBookingsIfPresent();
+  });
+
+  test('@regression @p2 ticket quantity respects minimum and maximum bounds', async ({
+    eventsPage,
+    eventDetailsPage,
+  }) => {
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.expectLoaded(featuredEvent.name);
+
+    await eventDetailsPage.expectQuantityControlsAtMin();
+    await eventDetailsPage.setTicketQuantity(10);
+    await eventDetailsPage.expectQuantityControlsAtMax();
+    await eventDetailsPage.expectTicketSummary(10, featuredEvent.totalForTenTickets);
+
+    await eventDetailsPage.setTicketQuantity(1);
+    await eventDetailsPage.expectQuantityControlsAtMin();
+    await eventDetailsPage.expectTicketSummary(1, featuredEvent.price);
+  });
 });

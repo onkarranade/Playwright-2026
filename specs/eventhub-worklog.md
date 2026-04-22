@@ -24,6 +24,9 @@ Type values:
 | 2026-04-20 | decision | Selector strategy | Prefer role, label, and test id selectors. Use placeholder only where no better accessible hook exists. | pages/, tests/ | pending |
 | 2026-04-20 | risk | Events | Filter UI reliably reflects selected category and city, but the URL may not persist both query params consistently. Prefer asserting selected values and filtered cards over category URL assertions. | pages/EventsPage.js, tests/events/events-browse.spec.js | pending |
 | 2026-04-20 | bug | Booking | Empty booking submission relies on native HTML required validation and does not expose a custom inline app error message. | pages/EventDetailsPage.js, tests/booking/booking-flow.spec.js | pending |
+| 2026-04-21 | decision | Auth | Cover route guards with empty storage state instead of creating a separate unauthenticated fixture layer. | tests/auth/login.spec.js | pending |
+| 2026-04-21 | decision | Booking | Use label-based assertions on booking details because shared values such as price and email appear in more than one part of the page. | pages/BookingDetailsPage.js, tests/booking/booking-flow.spec.js | pending |
+| 2026-04-21 | decision | Booking | Verify ticket boundaries through disabled states at 1 and 10 instead of over-click assertions. | pages/EventDetailsPage.js, tests/booking/booking-flow.spec.js | pending |
 | 2026-04-20 | todo | Admin | Add admin create or edit coverage only after deciding how to clean up created records without destabilizing shared data. | specs/eventhub-progress-matrix.md | pending |
 
 ## Commit Linking Convention
