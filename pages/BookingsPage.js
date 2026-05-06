@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class BookingsPage {
   constructor(page) {
     this.page = page;
@@ -13,14 +11,6 @@ export class BookingsPage {
     await this.page.goto('/bookings');
   }
 
-  async expectLoaded() {
-    await expect(this.heading).toBeVisible();
-  }
-
-  async expectBookingVisible(eventName) {
-    await expect(this.bookingCard(eventName)).toBeVisible();
-  }
-
   bookingCard(eventName) {
     return this.page.getByTestId('booking-card').filter({
       has: this.page.getByRole('heading', { name: eventName }),
@@ -28,22 +18,20 @@ export class BookingsPage {
   }
 
   async openBookingDetails(eventName) {
-    await this.bookingCard(eventName).getByRole('button', { name: 'View Details' }).click();
+    await Promise.all([
+      this.page.waitForURL(/\/bookings\/\d+$/),
+      this.bookingCard(eventName).getByRole('button', { name: 'View Details' }).click(),
+    ]);
   }
 
-  async expectBookingCancelled() {
-    await expect(this.page).toHaveURL(/\/bookings$/);
-    await expect(this.bookingCancelledToast).toBeVisible();
-  }
-
-  async expectBookingNotVisible(eventName) {
-    await expect(this.bookingCard(eventName)).toHaveCount(0);
+  async hasNoBookings() {
+    return this.noBookingsHeading.isVisible();
   }
 
   async clearAllBookingsIfPresent() {
-    await this.expectLoaded();
+    await this.heading.waitFor({ state: 'visible' });
 
-    if (await this.noBookingsHeading.isVisible()) {
+    if (await this.hasNoBookings()) {
       return;
     }
 
@@ -52,7 +40,6 @@ export class BookingsPage {
     });
 
     await this.clearAllButton.click({ force: true });
-
-    await expect(this.noBookingsHeading).toBeVisible();
+    await this.noBookingsHeading.waitFor({ state: 'visible' });
   }
 }

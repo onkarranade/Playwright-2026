@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class EventDetailsPage {
   constructor(page) {
     this.page = page;
@@ -16,15 +14,15 @@ export class EventDetailsPage {
     this.viewMyBookingsButton = page.getByRole('button', { name: 'View My Bookings' });
   }
 
-  async expectLoaded(eventName) {
-    await expect(this.page.getByRole('heading', { name: eventName })).toBeVisible();
-    await expect(this.bookTicketsHeading).toBeVisible();
-  }
-
   async fillBookingForm(details) {
     await this.fullNameInput.fill(details.fullName);
     await this.emailInput.fill(details.email);
     await this.phoneInput.fill(details.phone);
+  }
+
+  async waitForBookingForm() {
+    await this.bookTicketsHeading.waitFor({ state: 'visible' });
+    await this.confirmBookingButton.waitFor({ state: 'visible' });
   }
 
   async increaseTicketQuantity() {
@@ -47,43 +45,8 @@ export class EventDetailsPage {
     }
   }
 
-  async expectTicketSummary(quantity, total) {
-    await expect(this.ticketCount).toHaveText(String(quantity));
-    await expect(this.page.getByText(`$1,500 × ${quantity} ticket${quantity > 1 ? 's' : ''}`)).toBeVisible();
-    await expect(this.totalRow).toContainText(total);
-  }
-
-  async expectQuantityControlsAtMin() {
-    await expect(this.ticketCount).toHaveText('1');
-    await expect(this.decreaseTicketButton).toBeDisabled();
-    await expect(this.increaseTicketButton).toBeEnabled();
-  }
-
-  async expectQuantityControlsAtMax() {
-    await expect(this.ticketCount).toHaveText('10');
-    await expect(this.increaseTicketButton).toBeDisabled();
-    await expect(this.decreaseTicketButton).toBeEnabled();
-  }
-
   async confirmBooking() {
     await this.confirmBookingButton.click();
-  }
-
-  async expectRequiredFieldValidation() {
-    for (const input of [this.fullNameInput, this.emailInput, this.phoneInput]) {
-      await expect(input).toHaveJSProperty('required', true);
-      const validity = await input.evaluate((element) => ({
-        valid: element.validity.valid,
-        valueMissing: element.validity.valueMissing,
-      }));
-
-      expect(validity).toEqual({ valid: false, valueMissing: true });
-    }
-  }
-
-  async expectBookingConfirmed(customerName) {
-    await expect(this.confirmationHeading).toBeVisible();
-    await expect(this.page.getByText(customerName)).toBeVisible();
   }
 
   async openMyBookings() {

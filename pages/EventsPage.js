@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 function escapeForRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -19,10 +17,6 @@ export class EventsPage {
     await this.page.goto('/events');
   }
 
-  async expectLoaded() {
-    await expect(this.searchInput).toBeVisible();
-  }
-
   eventCard(name) {
     return this.page.locator('article').filter({
       has: this.page.getByRole('heading', { name }),
@@ -39,47 +33,35 @@ export class EventsPage {
     }
   }
 
-  async expectFiltersApplied(category, city) {
-    await expect(this.categoryFilter).toHaveValue(category);
-    await expect(this.cityFilter).toHaveValue(city);
-    await expect(this.page).toHaveURL(new RegExp(`city=${escapeForRegex(city)}`));
-    await expect(this.clearFiltersButton).toBeVisible();
-  }
-
-  async expectCardSummary(event) {
-    const card = this.eventCard(event.name);
-
-    await expect(card).toContainText(event.category);
-    await expect(card).toContainText(event.date);
-    await expect(card).toContainText(event.price);
-    await expect(card).toContainText(event.availability);
-  }
-
   async clearFilters() {
     await this.clearFiltersButton.click();
   }
 
-  async expectFiltersCleared() {
-    await expect(this.categoryFilter).toHaveValue('');
-    await expect(this.cityFilter).toHaveValue('');
-    await expect(this.page).toHaveURL(/\/events$/);
-    await expect(this.clearFiltersButton).toHaveCount(0);
-  }
-
-  async expectSearchAndFilterApplied(query, category) {
-    await expect(this.searchInput).toHaveValue(query);
-    await expect(this.categoryFilter).toHaveValue(category);
-    await expect(this.page).toHaveURL(new RegExp(`search=${escapeForRegex(query)}`));
-    await expect(this.page).toHaveURL(new RegExp(`category=${escapeForRegex(category)}`));
-    await expect(this.clearFiltersButton).toBeVisible();
-  }
-
   async openEvent(name) {
-    await this.page.getByRole('link', { name }).click();
+    await Promise.all([
+      this.page.waitForURL(/\/events\/\d+$/),
+      this.page.getByRole('link', { name }).click(),
+    ]);
   }
 
   async searchFor(query) {
     await this.searchInput.fill(query);
-    await expect(this.page).toHaveURL(new RegExp(`search=${escapeForRegex(query)}`));
+  }
+
+  async waitForSearchQuery(query) {
+    await this.page.waitForURL(new RegExp(`search=${escapeForRegex(query)}`));
+  }
+
+  async waitForCityFilter(city) {
+    await this.page.waitForURL(new RegExp(`city=${escapeForRegex(city)}`));
+  }
+
+  async waitForSearchAndCategory(query, category) {
+    await this.page.waitForURL(new RegExp(`search=${escapeForRegex(query)}`));
+    await this.clearFiltersButton.waitFor({ state: 'visible' });
+  }
+
+  async waitForEventCard(name) {
+    await this.eventCard(name).waitFor({ state: 'visible' });
   }
 }

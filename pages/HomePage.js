@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class HomePage {
   constructor(page) {
     this.page = page;
@@ -14,13 +12,9 @@ export class HomePage {
     await this.page.goto('/');
   }
 
-  async expectLoaded() {
-    await expect(this.heroSection).toBeVisible();
-    await expect(this.browseEventsLink).toBeVisible();
-  }
-
-  async expectSignedInUser(email) {
-    await expect(this.userEmail).toHaveText(email);
+  async waitForLoaded() {
+    await this.heroSection.waitFor({ state: 'visible' });
+    await this.browseEventsLink.waitFor({ state: 'visible' });
   }
 
   async openEvents() {

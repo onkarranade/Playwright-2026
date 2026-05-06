@@ -1,6 +1,6 @@
 # EventHub Progress Matrix
 
-Last updated: 2026-04-20
+Last updated: 2026-05-05
 
 ## Status Legend
 
@@ -34,19 +34,27 @@ Last updated: 2026-04-20
 | Booking | P1 | Required booking fields prevent submission when incomplete | Passing | tests/booking/booking-flow.spec.js | Assert native HTML validity state |
 | Booking | P2 | Booking details page shows event, customer, and payment summary correctly | Passing | tests/booking/booking-flow.spec.js | Uses label-based summary assertions |
 | Booking | P2 | Ticket quantity respects minimum and maximum bounds | Passing | tests/booking/booking-flow.spec.js | Confirms disabled controls at 1 and 10 |
+| Admin | P1 | Admin can create a custom event | Passing | tests/admin/admin-events.spec.js | Creates custom row and deletes it in the same test |
+| Admin | P1 | Admin can edit a custom event title | Passing | tests/admin/admin-events.spec.js | Uses exact row matching so updated titles do not collide with originals |
+| Admin | P1 | Required admin fields block empty event submission | Passing | tests/admin/admin-events.spec.js | Assert native HTML required validation on admin form |
 
 ## Next Candidates
 
 | Priority | Candidate | Status | Notes |
 | --- | --- | --- | --- |
-| P1 | Admin event create flow | Planned | Needs cleanup strategy before automation |
-| P1 | Admin event edit flow | Planned | Best added only after create cleanup is defined |
-| P1 | Admin form validation | Planned | Low-risk admin entry point once create/edit cleanup is defined |
+| P1 | Admin event delete flow | Planned | Custom dialog is stable, but delete is already used as test cleanup |
+| P2 | Admin cancel-edit reset flow | Planned | Good follow-up after create/edit baseline |
+| P2 | Admin duplicate or invalid input handling | Planned | Depends on which server-side validations are exposed in the UI |
 
 ## Latest Verification
 
 | Date | Command | Result |
 | --- | --- | --- |
+| 2026-05-05 | `npx playwright test --project=chromium` | 21 passed |
+| 2026-05-05 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium` | 18 passed |
+| 2026-05-05 | `npx playwright test tests/admin/admin-events.spec.js --project=chromium` | 4 passed |
+| 2026-04-29 | `npx playwright test tests/admin/admin-events.spec.js --project=chromium` | 4 passed |
+| 2026-04-29 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js tests/admin/admin-events.spec.js --project=chromium` | 15 passed, 2 failed, 4 did not run; admin scenarios passed, unrelated failures remain in existing Events P2 and Booking P0/P1/P2 chain |
 | 2026-04-21 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium` | 18 passed |
 | 2026-04-21 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium --grep "@p2"` | 7 passed |
 | 2026-04-20 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium` | 12 passed |

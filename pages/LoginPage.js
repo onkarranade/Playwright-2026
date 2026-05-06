@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class LoginPage {
   constructor(page) {
     this.page = page;
@@ -15,8 +13,8 @@ export class LoginPage {
     await this.page.goto('/login');
   }
 
-  async expectLoaded() {
-    await expect(this.heading).toBeVisible();
+  async waitForLoaded() {
+    await this.heading.waitFor({ state: 'visible' });
   }
 
   async signIn(email, password) {

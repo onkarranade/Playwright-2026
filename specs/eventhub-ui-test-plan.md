@@ -9,6 +9,7 @@
 | Event browsing and search | Core discovery workflow | Search debounces and exposes a stable empty state |
 | Event details and booking | Highest business-value user journey | Use featured event for repeatable booking coverage |
 | My Bookings and cleanup | Needed to validate booking result and keep data clean | Clear-all flow has a browser confirm dialog |
+| Admin event management | Covers internal CRUD paths with stable labeled form controls | Custom events expose Edit/Delete actions and can be self-cleaned |
 
 ## 2. Prioritized Test Scenarios
 
@@ -44,9 +45,18 @@
 | P2 | Booking details page shows event, customer, and payment summary correctly |
 | P2 | Ticket quantity respects minimum and maximum bounds |
 
+### Admin
+
+| Priority | Scenario |
+| --- | --- |
+| P1 | Admin can create a custom event |
+| P1 | Admin can edit a custom event title |
+| P1 | Required admin fields prevent empty event submission |
+
 ## 3. Framework Design
 
 - Keep page objects only for reusable screens: Login, Home, Events, Event Details, Bookings.
+- Keep page objects thin: locators, actions, and wait helpers only; put all assertions in test specs.
 - Use one shared fixture file to inject page objects into tests.
 - Use a setup project to create authenticated storage state instead of logging in inside every test.
 - Keep test data in plain JavaScript modules so a solo developer can update values quickly.
@@ -125,17 +135,22 @@ npm run test:smoke
 npm run test:regression
 npm run test:headed
 npm run auth:init
+npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium
+npx playwright test tests/admin/admin-events.spec.js --project=chromium --workers=1
 ```
 
 - Use `@smoke` for the fastest confidence checks.
 - Use `@regression` for the broader local run.
 - Parallel execution is enabled at the file level; keep data-mutating scenarios isolated and self-cleaning.
+- Keep `tests/events/events-browse.spec.js`, `tests/booking/booking-flow.spec.js`, and `tests/admin/admin-events.spec.js` in serial mode to reduce shared-state flakes.
+- Preferred stable order: run core user journeys first, then run admin coverage separately.
 
 ## 8. Implemented P1 Coverage
 
 - Authentication: register link navigation is covered in `tests/auth/login.spec.js`.
 - Events: filter narrowing and featured-card metadata are covered in `tests/events/events-browse.spec.js`.
 - Booking: two-ticket total recalculation and empty-form blocking are covered in `tests/booking/booking-flow.spec.js`.
+- Admin: create, edit, and empty-form validation are covered in `tests/admin/admin-events.spec.js`.
 
 ## 9. Implemented P2 Coverage
 
