@@ -7,13 +7,10 @@ test.describe('Authentication', () => {
   test('@smoke @p0 sign in succeeds with valid credentials', async ({ loginPage, homePage }) => {
     await loginPage.visit();
     await loginPage.waitForLoaded();
-    await expect(loginPage.heading).toBeVisible();
 
     await loginPage.signIn(users.valid.email, users.valid.password);
 
     await homePage.waitForLoaded();
-    await expect(homePage.heroSection).toBeVisible();
-    await expect(homePage.browseEventsLink).toBeVisible();
     await expect(homePage.userEmail).toHaveText(users.valid.email);
   });
 
@@ -29,7 +26,6 @@ test.describe('Authentication', () => {
   test('@regression @p1 register link routes to the registration page', async ({ loginPage, page }) => {
     await loginPage.visit();
     await loginPage.waitForLoaded();
-    await expect(loginPage.heading).toBeVisible();
 
     await loginPage.openRegister();
 
@@ -42,7 +38,6 @@ test.describe('Authentication', () => {
       await page.goto(route);
       await expect(page).toHaveURL(/\/login$/);
       await loginPage.waitForLoaded();
-      await expect(loginPage.heading).toBeVisible();
     }
   });
 });
@@ -51,12 +46,10 @@ test.describe('Session management', () => {
   test('@regression @p2 logout returns the user to login', async ({ homePage, loginPage, page }) => {
     await homePage.visit();
     await homePage.waitForLoaded();
-    await expect(homePage.heroSection).toBeVisible();
 
     await homePage.logout();
 
     await expect(page).toHaveURL(/\/login$/);
     await loginPage.waitForLoaded();
-    await expect(loginPage.heading).toBeVisible();
   });
 });

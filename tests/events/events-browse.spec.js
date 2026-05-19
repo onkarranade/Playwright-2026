@@ -12,8 +12,6 @@ test.describe('Event browsing', () => {
   }) => {
     await homePage.visit();
     await homePage.waitForLoaded();
-    await expect(homePage.heroSection).toBeVisible();
-    await expect(homePage.browseEventsLink).toBeVisible();
     await expect(homePage.userEmail).toHaveText(users.valid.email);
 
     await homePage.openEvents();

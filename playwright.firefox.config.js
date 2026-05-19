@@ -1,21 +1,14 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
 import dotenv from 'dotenv';
 import path from 'path';
-import { CHROME_AUTH_STORAGE_PATH } from './utils/constants.js';
+import { FIREFOX_AUTH_STORAGE_PATH } from './utils/constants.js';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const isCI = !!process.env.CI;
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -35,19 +28,20 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'setup',
+      name: 'setup-firefox',
       testMatch: /.*\.setup\.js/,
+      use: {
+        ...devices['Desktop Firefox'],
+      },
     },
     {
-      name: 'chromium',
-      dependencies: ['setup'],
+      name: 'firefox',
+      dependencies: ['setup-firefox'],
       testIgnore: /.*\.setup\.js/,
       use: {
-        ...devices['Desktop Chrome'],
-        storageState: CHROME_AUTH_STORAGE_PATH,
-        viewport: { width: 1440, height: 900 },
+        ...devices['Desktop Firefox'],
+        storageState: FIREFOX_AUTH_STORAGE_PATH,
       },
     },
   ],
 });
-
