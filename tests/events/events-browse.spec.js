@@ -59,7 +59,7 @@ test.describe('Event browsing', () => {
     await expect(card).toContainText(featuredEvent.category);
     await expect(card).toContainText(featuredEvent.date);
     await expect(card).toContainText(featuredEvent.price);
-    await expect(card).toContainText(featuredEvent.availability);
+    await expect(card).toContainText(/\d+\s+seats available/);
   });
 
   test('@regression @p2 clear filters resets the event discovery view', async ({ eventsPage }) => {

@@ -1,3 +1,5 @@
+// @ts-check
+
 import { test as base, expect } from '@playwright/test';
 import { AdminEventsPage } from '../pages/AdminEventsPage.js';
 import { BookingDetailsPage } from '../pages/BookingDetailsPage.js';
