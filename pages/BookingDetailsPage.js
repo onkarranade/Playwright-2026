@@ -1,4 +1,5 @@
 export class BookingDetailsPage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.bookingReference = page.locator('main').getByText(/^W-[A-Z0-9]+$/).first();

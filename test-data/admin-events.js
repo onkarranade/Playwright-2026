@@ -13,3 +13,22 @@ export function createAdminEventData() {
     totalSeats: 150,
   };
 }
+
+
+export function secondAdminEventData() {
+
+  const suffix1 = Date.now().toString().slice(-6);
+
+  return {
+    title: `Football world ${suffix1}`,
+    updatedTitle: `Football world cup event ${suffix1} Updated`,
+    description: 'Football world cup event', 
+    category: 'Sports',
+    city: 'Mumbai',
+    eventDateTime: '2026-11-20T18:00',
+     price: 500,
+     totalSeats: 200,
+    
+  }
+}
+

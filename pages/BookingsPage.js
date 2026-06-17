@@ -1,10 +1,12 @@
 export class BookingsPage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.heading = page.getByRole('heading', { name: 'My Bookings' });
     this.clearAllButton = page.getByRole('button', { name: 'Clear all bookings' });
     this.noBookingsHeading = page.getByRole('heading', { name: 'No bookings yet' });
     this.bookingCancelledToast = page.getByText('Booking cancelled successfully');
+    this.browseEventsLink = page.getByRole('button', { name: 'Browse Events' });
   }
 
   async visit() {
@@ -41,5 +43,10 @@ export class BookingsPage {
 
     await this.clearAllButton.click({ force: true });
     await this.noBookingsHeading.waitFor({ state: 'visible' });
+  }
+
+  async browseEvents()
+  {
+    await this.browseEventsLink.click();
   }
 }

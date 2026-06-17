@@ -1,4 +1,5 @@
 export class EventDetailsPage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.bookTicketsHeading = page.getByRole('heading', { name: 'Book Tickets' });

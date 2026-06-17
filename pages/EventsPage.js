@@ -3,6 +3,7 @@ function escapeForRegex(value) {
 }
 
 export class EventsPage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.searchInput = page.getByPlaceholder('Search events, venues…');
@@ -11,6 +12,10 @@ export class EventsPage {
     this.clearFiltersButton = page.getByRole('button', { name: 'Clear filters' });
     this.noEventsHeading = page.getByRole('heading', { name: 'No events found' });
     this.noEventsDescription = page.getByText("Try adjusting your filters or search terms to find what you're looking for.");
+    this.upComingEventsHeading= page.getByRole('heading', { name: /Upcoming Events/i });
+    this.eventList=page.locator('#event-card');
+    this.addnewEventButton=page.getByRole('button', { name: 'Add New Event' })
+
   }
 
   async visit() {
@@ -63,5 +68,11 @@ export class EventsPage {
 
   async waitForEventCard(name) {
     await this.eventCard(name).waitFor({ state: 'visible' });
+  }
+
+  async openAddNewEventForm()
+  {
+    await this.addnewEventButton.click();
+    //await this.page.waitForURL(/\/events\/new$/);
   }
 }

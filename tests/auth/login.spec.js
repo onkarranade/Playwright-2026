@@ -15,7 +15,8 @@ test.describe('Authentication', () => {
   });
 
   test('@p0 invalid credentials show an error toast', async ({ loginPage }) => {
-    await loginPage.visit();
+    await loginPage.visit(); 
+    await loginPage.waitForLoaded();
 
     await loginPage.signIn(users.invalid.email, users.invalid.password);
 

@@ -1,4 +1,5 @@
 export class AdminEventsPage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.newEventHeading = page.getByRole('heading', { name: '+ New Event' });

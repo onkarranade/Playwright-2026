@@ -35,6 +35,27 @@ Type values:
 | 2026-05-05 | decision | Framework | Standardized on thin POM: page objects now expose locators/actions/waits only, while assertions live in test specs. | pages/, tests/ | pending |
 | 2026-05-05 | decision | Execution strategy | Keep stateful suites serial at file level and run core user journeys before admin for stable local and CI runs. | tests/events/events-browse.spec.js, tests/booking/booking-flow.spec.js, tests/admin/admin-events.spec.js | pending |
 | 2026-05-05 | decision | Regression health | Full Chromium regression is currently green after synchronization and thin-POM refactors. | tests/auth/login.spec.js, tests/events/events-browse.spec.js, tests/booking/booking-flow.spec.js, tests/admin/admin-events.spec.js | pending |
+| 2026-05-18 | decision | Auth architecture | Split persisted auth state by browser and route setup output by project name with explicit validation for unsupported projects. | tests/setup/auth.setup.js, utils/constants.js | ea959a9 - split auth state by browser |
+| 2026-05-18 | decision | Multi-browser execution | Added dedicated Playwright configs for Chrome and Firefox with isolated setup dependency chains and browser-specific storageState. | playwright.chrome.config.js, playwright.firefox.config.js, playwright.config.js | ea959a9 - add dedicated config files |
+| 2026-05-18 | decision | Test stability | Removed duplicate assertions that repeated wait helper coverage and replaced emoji-dependent admin locators with text regex patterns. | tests/auth/login.spec.js, tests/events/events-browse.spec.js, pages/AdminEventsPage.js | ea959a9 - code quality improvements |
+| 2026-05-18 | decision | Tooling/scripts | Updated npm scripts for browser-targeted auth init and test execution; refreshed lockfile from script/config changes. | package.json, package-lock.json | ea959a9 - update scripts for split configs |
+
+## Recent Commit Details
+
+- Commit: `ea959a9d8f21145f10132edf9421bf29fe4c71d9` (`ea959a9`)
+- Date: 2026-05-18 21:09:01 -0400
+- Message: `refactor: split auth state by browser and add dedicated config files`
+- Changed files:
+	- `.github/instructions/playwright-tests.md` (added)
+	- `package-lock.json` (modified)
+	- `package.json` (modified)
+	- `playwright.chrome.config.js` (added)
+	- `playwright.config.js` (modified)
+	- `playwright.firefox.config.js` (added)
+	- `tests/auth/login.spec.js` (modified)
+	- `tests/events/events-browse.spec.js` (modified)
+	- `tests/setup/auth.setup.js` (modified)
+	- `utils/constants.js` (modified)
 
 ## Commit Linking Convention
 

@@ -1,4 +1,5 @@
 export class HomePage {
+  /** @param {import('@playwright/test').Page} page */
   constructor(page) {
     this.page = page;
     this.heroSection = page.locator('main').getByText('From tech conferences to live concerts, sports events to cultural festivals');
@@ -6,6 +7,8 @@ export class HomePage {
     this.browseEventsLink = page.getByRole('link', { name: 'Browse Events →' });
     this.myBookingsButton = page.getByRole('button', { name: 'My Bookings' });
     this.logoutButton = page.getByRole('button', { name: 'Logout' });
+    this.viewAllEventsLink = page.getByRole('link', { name: /view all/i });
+    
   }
 
   async visit() {
@@ -27,5 +30,11 @@ export class HomePage {
 
   async logout() {
     await this.logoutButton.click();
+  }
+
+  async openAllEvents()
+  {
+    await this.viewAllEventsLink.click();
+    
   }
 }
