@@ -41,11 +41,21 @@ export default defineConfig({
     {
       name: 'chromium',
       dependencies: ['setup'],
-      testIgnore: /.*\.setup\.js/,
+      testIgnore: [/.*\.setup\.js/, /.*\.api\.spec\.js/],
       use: {
         ...devices['Desktop Chrome'],
         storageState: CHROME_AUTH_STORAGE_PATH,
         viewport: { width: 1440, height: 900 },
+      },
+    },
+    {
+      name: 'api',
+      testMatch: /.*\.api\.spec\.js/,
+      use: {
+        baseURL: process.env.EVENTHUB_API_BASE_URL ?? 'https://api.eventhub.rahulshettyacademy.com/api',
+        extraHTTPHeaders: {
+          Accept: 'application/json',
+        },
       },
     },
   ],

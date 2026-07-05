@@ -37,10 +37,20 @@ export default defineConfig({
     {
       name: 'firefox',
       dependencies: ['setup-firefox'],
-      testIgnore: /.*\.setup\.js/,
+      testIgnore: [/.*\.setup\.js/, /.*\.api\.spec\.js/],
       use: {
         ...devices['Desktop Firefox'],
         storageState: FIREFOX_AUTH_STORAGE_PATH,
+      },
+    },
+    {
+      name: 'api',
+      testMatch: /.*\.api\.spec\.js/,
+      use: {
+        baseURL: process.env.EVENTHUB_API_BASE_URL ?? 'https://api.eventhub.rahulshettyacademy.com/api',
+        extraHTTPHeaders: {
+          Accept: 'application/json',
+        },
       },
     },
   ],
