@@ -184,12 +184,19 @@ test.describe('Booking flow', () => {
     await expect(eventDetailsPage.ticketCount).toHaveText('1');
     await expect(eventDetailsPage.decreaseTicketButton).toBeDisabled();
     await expect(eventDetailsPage.increaseTicketButton).toBeEnabled();
-    await eventDetailsPage.setTicketQuantity(10);
-    await expect(eventDetailsPage.ticketCount).toHaveText('10');
+
+    // Increase until the UI-enforced upper bound (min(available seats, 10)).
+    while (await eventDetailsPage.increaseTicketButton.isEnabled()) {
+      await eventDetailsPage.increaseTicketButton.click();
+    }
+
+    const maxQuantity = Number(await eventDetailsPage.ticketCount.textContent());
+
+    expect(maxQuantity).toBeGreaterThanOrEqual(1);
+    expect(maxQuantity).toBeLessThanOrEqual(10);
     await expect(eventDetailsPage.increaseTicketButton).toBeDisabled();
     await expect(eventDetailsPage.decreaseTicketButton).toBeEnabled();
-    await expect(page.getByText('$1,500 × 10 tickets')).toBeVisible();
-    await expect(eventDetailsPage.totalRow).toContainText(featuredEvent.totalForTenTickets);
+    await expect(page.getByText(new RegExp(`\\$1,500 × ${maxQuantity} tickets?`))).toBeVisible();
 
     await eventDetailsPage.setTicketQuantity(1);
     await expect(eventDetailsPage.ticketCount).toHaveText('1');

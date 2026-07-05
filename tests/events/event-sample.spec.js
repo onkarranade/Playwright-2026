@@ -1,6 +1,4 @@
 import { test, expect } from "../../fixtures/test-base.js";
-import { BookingsPage } from "../../pages/BookingsPage.js";
-import { featuredEvent } from "../../test-data/events.js";
 import { secondaryBookingDetails } from "../../utils/booking.js";
 
 
@@ -27,7 +25,7 @@ test.describe("samples", () => {
         }
     });
 
-    test('sample2', async ({ page, homePage, eventsPage, bookingsPage ,eventDetailsPage}) => {
+    test('sample2', async ({ page, homePage, eventsPage, bookingsPage }) => {
 
         await homePage.visit();
         await homePage.waitForLoaded();
@@ -65,9 +63,8 @@ test.describe("samples", () => {
     await eventDetailsPage.openMyBookings();
     await expect(page).toHaveURL(/\/bookings$/);
     await expect(bookingsPage.heading).toBeVisible();
-    await expect(bookingsPage.bookingCard(featuredEvent.name)).toBeVisible();
-    
-    })
+    await expect(bookingsPage.bookingCard('Hollywood Monsoon Night — Los Angeles')).toBeVisible();
+    });
 });
 
 

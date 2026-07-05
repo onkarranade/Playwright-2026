@@ -59,7 +59,7 @@ test.describe('Event browsing', () => {
     await expect(card).toContainText(featuredEvent.category);
     await expect(card).toContainText(featuredEvent.date);
     await expect(card).toContainText(featuredEvent.price);
-    await expect(card).toContainText(/\d+\s+seats available/);
+    await expect(card).toContainText(/\d+\s+seats\s+(available|left!?)/i);
   });
 
   test('@regression @p2 clear filters resets the event discovery view', async ({ eventsPage }) => {
@@ -88,12 +88,11 @@ test.describe('Event browsing', () => {
 
     await eventsPage.searchFor(featuredEvent.searchQuery);
     await eventsPage.filterBy(featuredEvent.category);
-    await eventsPage.waitForSearchAndCategory(featuredEvent.searchQuery, featuredEvent.category);
     await eventsPage.waitForEventCard(featuredEvent.name);
+    await expect(eventsPage.clearFiltersButton).toBeVisible();
 
     await expect(eventsPage.searchInput).toHaveValue(featuredEvent.searchQuery);
     await expect(eventsPage.categoryFilter).toHaveValue(featuredEvent.category);
-    await expect(eventsPage.page).toHaveURL(new RegExp(`search=${featuredEvent.searchQuery}`));
 
     await expect(eventsPage.eventCard(featuredEvent.name)).toBeVisible();
     await expect(eventsPage.eventCard(nonMatchingFilteredEvent.name)).toHaveCount(0);

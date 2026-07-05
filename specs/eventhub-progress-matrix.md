@@ -1,6 +1,6 @@
 # EventHub Progress Matrix
 
-Last updated: 2026-05-05
+Last updated: 2026-07-05
 
 ## Status Legend
 
@@ -33,10 +33,16 @@ Last updated: 2026-05-05
 | Booking | P1 | Ticket quantity updates total price correctly | Passing | tests/booking/booking-flow.spec.js | Verified with 2-ticket total |
 | Booking | P1 | Required booking fields prevent submission when incomplete | Passing | tests/booking/booking-flow.spec.js | Assert native HTML validity state |
 | Booking | P2 | Booking details page shows event, customer, and payment summary correctly | Passing | tests/booking/booking-flow.spec.js | Uses label-based summary assertions |
-| Booking | P2 | Ticket quantity respects minimum and maximum bounds | Passing | tests/booking/booking-flow.spec.js | Confirms disabled controls at 1 and 10 |
+| Booking | P2 | Ticket quantity respects minimum and maximum bounds | Passing | tests/booking/booking-flow.spec.js | Confirms disabled controls at minimum and UI-enforced maximum |
 | Admin | P1 | Admin can create a custom event | Passing | tests/admin/admin-events.spec.js | Creates custom row and deletes it in the same test |
 | Admin | P1 | Admin can edit a custom event title | Passing | tests/admin/admin-events.spec.js | Uses exact row matching so updated titles do not collide with originals |
 | Admin | P1 | Required admin fields block empty event submission | Passing | tests/admin/admin-events.spec.js | Assert native HTML required validation on admin form |
+| API | P0 | Health endpoint reports API and database status | Passing | tests/api/eventhub.api.spec.js | Validates status, dbStatus, and timestamp |
+| API | P0 | Config endpoint returns public feature flags | Passing | tests/api/eventhub.api.spec.js | Verifies feature flag payload |
+| API | P0 | Auth login token can be reused with auth/me | Passing | tests/api/eventhub.api.spec.js | Verifies bearer token auth chain |
+| API | P1 | Events listing returns data and pagination metadata | Passing | tests/api/eventhub.api.spec.js | Verifies seeded data and paging fields |
+| API | P1 | Event CRUD lifecycle (create/read/update/delete) works | Passing | tests/api/event-crud.api.spec.js | Includes cleanup and 404 assertion after delete |
+| API | P1 | Booking lifecycle (create/read by id/ref/cancel) and seat restoration works | Passing | tests/api/booking-crud.api.spec.js | Verifies seat decrement and restore behavior |
 
 ## Next Candidates
 
@@ -45,11 +51,14 @@ Last updated: 2026-05-05
 | P1 | Admin event delete flow | Planned | Custom dialog is stable, but delete is already used as test cleanup |
 | P2 | Admin cancel-edit reset flow | Planned | Good follow-up after create/edit baseline |
 | P2 | Admin duplicate or invalid input handling | Planned | Depends on which server-side validations are exposed in the UI |
+| P1 | API validation and authorization negative tests | Planned | Add 400/401/404 cases for auth, events, and bookings |
 
 ## Latest Verification
 
 | Date | Command | Result |
 | --- | --- | --- |
+| 2026-07-05 | `npm test` | 30 passed |
+| 2026-07-05 | `npm run test:api` | 6 passed |
 | 2026-05-05 | `npx playwright test --project=chromium` | 21 passed |
 | 2026-05-05 | `npx playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --project=chromium` | 18 passed |
 | 2026-05-05 | `npx playwright test tests/admin/admin-events.spec.js --project=chromium` | 4 passed |
