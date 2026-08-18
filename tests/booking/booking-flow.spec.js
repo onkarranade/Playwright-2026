@@ -83,6 +83,35 @@ test.describe('Booking flow', () => {
   await expect(bookingsPage.bookingCard(featuredEvent.name)).toHaveCount(0);
   });
 
+  test('@p0 user can cancel a booking directly from the My Bookings list', async ({
+    page,
+    eventsPage,
+    eventDetailsPage,
+    bookingsPage,
+  }) => {
+    const booking = createBookingDetails();
+
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await expect(page).toHaveURL(/\/events\/\d+$/);
+    await expect(page.getByRole('heading', { name: featuredEvent.name })).toBeVisible();
+    await eventDetailsPage.waitForBookingForm();
+
+    await eventDetailsPage.fillBookingForm(booking);
+    await eventDetailsPage.confirmBooking();
+    await expect(eventDetailsPage.confirmationHeading).toBeVisible();
+
+    await eventDetailsPage.openMyBookings();
+    await expect(page).toHaveURL(/\/bookings$/);
+    await expect(bookingsPage.bookingCard(featuredEvent.name)).toBeVisible();
+
+    await bookingsPage.cancelBooking(featuredEvent.name);
+
+    await expect(bookingsPage.bookingCancelledToast).toBeVisible();
+    await expect(bookingsPage.noBookingsHeading).toBeVisible();
+    await expect(bookingsPage.bookingCard(featuredEvent.name)).toHaveCount(0);
+  });
+
   test('@regression @p1 ticket quantity updates the total price', async ({
     page,
     eventsPage,

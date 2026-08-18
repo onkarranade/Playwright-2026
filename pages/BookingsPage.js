@@ -8,6 +8,8 @@ export class BookingsPage {
     this.bookingCancelledToast = page.getByText('Booking cancelled successfully');
     this.browseEventsLink = page.getByRole('button', { name: 'Browse Events' });
     this.bookingCards = page.getByTestId('booking-card');
+    this.cancelDialog = page.getByRole('dialog', { name: 'Cancel this booking?' });
+    this.confirmCancelButton = page.getByRole('button', { name: 'Yes, cancel it' });
   }
 
   async visit() {
@@ -25,6 +27,12 @@ export class BookingsPage {
       this.page.waitForURL(/\/bookings\/\d+$/),
       this.bookingCard(eventName).getByRole('button', { name: 'View Details' }).click(),
     ]);
+  }
+
+  async cancelBooking(eventName) {
+    await this.bookingCard(eventName).getByRole('button', { name: 'Cancel Booking' }).click();
+    await this.cancelDialog.waitFor({ state: 'visible' });
+    await this.confirmCancelButton.click();
   }
 
   async hasNoBookings() {
@@ -61,6 +69,8 @@ export class BookingsPage {
     while (await this.bookingCards.count()) {
       const beforeCount = await this.bookingCards.count();
       await this.bookingCards.first().getByRole('button', { name: 'Cancel Booking' }).click();
+      await this.cancelDialog.waitFor({ state: 'visible' });
+      await this.confirmCancelButton.click();
       await this.page.waitForFunction(
         (count) => document.querySelectorAll('[data-testid="booking-card"]').length < count,
         beforeCount,

@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test';
+import { AdminBookingsPage } from '../pages/AdminBookingsPage.js';
 import { AdminEventsPage } from '../pages/AdminEventsPage.js';
 import { BookingDetailsPage } from '../pages/BookingDetailsPage.js';
 import { BookingsPage } from '../pages/BookingsPage.js';
@@ -10,6 +11,9 @@ import { LoginPage } from '../pages/LoginPage.js';
 export const test = base.extend({
   adminEventsPage: async ({ page }, use) => {
     await use(new AdminEventsPage(page));
+  },
+  adminBookingsPage: async ({ page }, use) => {
+    await use(new AdminBookingsPage(page));
   },
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));

@@ -1,6 +1,6 @@
 # EventHub Progress Matrix
 
-Last updated: 2026-07-05
+Last updated: 2026-08-17
 
 ## Status Legend
 
@@ -30,13 +30,17 @@ Last updated: 2026-07-05
 | Booking | P0 | User can book the featured event and see it in My Bookings | Passing | tests/booking/booking-flow.spec.js | Self-cleans test data |
 | Booking | P0 | User can clear bookings to reset test data | Passing | tests/booking/booking-flow.spec.js | Uses browser confirm dialog handling |
 | Booking | P0 | User can cancel a single booking from booking details | Passing | tests/booking/booking-flow.spec.js | Serial due to shared booking state |
+| Booking | P0 | User can cancel a booking directly from the My Bookings list | Passing | tests/booking/booking-flow.spec.js | Cancels via the card's own button, without opening booking details |
 | Booking | P1 | Ticket quantity updates total price correctly | Passing | tests/booking/booking-flow.spec.js | Verified with 2-ticket total |
 | Booking | P1 | Required booking fields prevent submission when incomplete | Passing | tests/booking/booking-flow.spec.js | Assert native HTML validity state |
 | Booking | P2 | Booking details page shows event, customer, and payment summary correctly | Passing | tests/booking/booking-flow.spec.js | Uses label-based summary assertions |
 | Booking | P2 | Ticket quantity respects minimum and maximum bounds | Passing | tests/booking/booking-flow.spec.js | Confirms disabled controls at minimum and UI-enforced maximum |
 | Admin | P1 | Admin can create a custom event | Passing | tests/admin/admin-events.spec.js | Creates custom row and deletes it in the same test |
 | Admin | P1 | Admin can edit a custom event title | Passing | tests/admin/admin-events.spec.js | Uses exact row matching so updated titles do not collide with originals |
+| Admin | P1 | Admin can delete a custom event | Passing | tests/admin/admin-events.spec.js | Asserts row removal; races the confirm click against the delete toast |
 | Admin | P1 | Required admin fields block empty event submission | Passing | tests/admin/admin-events.spec.js | Assert native HTML required validation on admin form |
+| Admin | P1 | Admin can view booking details from Manage Bookings | Passing | tests/admin/admin-bookings.spec.js | Asserts event, customer, and contact details in the View modal |
+| Admin | P1 | Admin can cancel a booking from Manage Bookings | Passing | tests/admin/admin-bookings.spec.js | Asserts row removal after confirming the Cancel modal |
 | API | P0 | Health endpoint reports API and database status | Passing | tests/api/eventhub.api.spec.js | Validates status, dbStatus, and timestamp |
 | API | P0 | Config endpoint returns public feature flags | Passing | tests/api/eventhub.api.spec.js | Verifies feature flag payload |
 | API | P0 | Auth login token can be reused with auth/me | Passing | tests/api/eventhub.api.spec.js | Verifies bearer token auth chain |
@@ -48,7 +52,6 @@ Last updated: 2026-07-05
 
 | Priority | Candidate | Status | Notes |
 | --- | --- | --- | --- |
-| P1 | Admin event delete flow | Planned | Custom dialog is stable, but delete is already used as test cleanup |
 | P2 | Admin cancel-edit reset flow | Planned | Good follow-up after create/edit baseline |
 | P2 | Admin duplicate or invalid input handling | Planned | Depends on which server-side validations are exposed in the UI |
 | P1 | API validation and authorization negative tests | Planned | Add 400/401/404 cases for auth, events, and bookings |
@@ -57,6 +60,9 @@ Last updated: 2026-07-05
 
 | Date | Command | Result |
 | --- | --- | --- |
+| 2026-08-17 | `npx playwright test --workers=1` | 34 passed |
+| 2026-08-17 | `npx playwright test tests/admin/admin-bookings.spec.js --workers=1` | 3 passed |
+| 2026-08-17 | `npx playwright test tests/booking/booking-flow.spec.js --workers=1` | 8 passed |
 | 2026-07-05 | `npm test` | 30 passed |
 | 2026-07-05 | `npm run test:api` | 6 passed |
 | 2026-05-05 | `npx playwright test --project=chromium` | 21 passed |
