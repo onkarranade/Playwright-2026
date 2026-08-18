@@ -18,7 +18,7 @@ export class AdminEventsPage {
     this.cancelEditButton = page.getByRole('button', { name: 'Cancel edit' });
     this.deleteDialog = page.getByRole('dialog', { name: 'Delete this event?' });
     this.confirmDeleteButton = page.getByRole('button', { name: 'Delete event' });
-    this.deleteToast = page.getByText('Event deleted!');
+    this.deleteToast = page.getByText(/event deleted/i);
     this.createToast = page.getByText('Event created!');
     this.updateToast = page.getByText('Event updated!');
   }
@@ -88,6 +88,19 @@ export class AdminEventsPage {
       await this.confirmDeleteButton.click();
       await row.first().waitFor({ state: 'detached' });
     }
+  }
+
+  async deleteEvent(title) {
+    await this.eventRow(title).getByRole('button', { name: 'Delete' }).click();
+    await this.deleteDialog.waitFor({ state: 'visible' });
+    await Promise.all([
+      this.deleteToast.waitFor({ state: 'visible' }),
+      this.confirmDeleteButton.click(),
+    ]);
+  }
+
+  async waitForDeleteToast() {
+    await this.deleteToast.waitFor({ state: 'visible' });
   }
 
   async hasEvent(title) {

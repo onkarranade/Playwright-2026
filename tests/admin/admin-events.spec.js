@@ -50,6 +50,23 @@ test.describe('Admin events', () => {
     await adminEventsPage.deleteEventIfPresent(event.updatedTitle);
   });
 
+  test('@regression @p1 admin can delete a custom event', async ({ adminEventsPage }) => {
+    const event = createAdminEventData();
+
+    await adminEventsPage.visit();
+    await adminEventsPage.waitForLoaded();
+    await adminEventsPage.deleteEventIfPresent(event.title);
+
+    await adminEventsPage.fillNewEventForm(event);
+    await adminEventsPage.addEvent();
+    await adminEventsPage.waitForCreateToast();
+    await expect(adminEventsPage.eventRow(event.title)).toBeVisible();
+
+    await adminEventsPage.deleteEvent(event.title);
+
+    await expect(adminEventsPage.eventRow(event.title)).toHaveCount(0);
+  });
+
   test('@regression @p1 required admin fields block empty event submission', async ({ adminEventsPage, page }) => {
     await adminEventsPage.visit();
     await adminEventsPage.waitForLoaded();

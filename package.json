@@ -26,7 +26,7 @@
   "description": "",
   "devDependencies": {
     "@playwright/cli": "^0.1.15",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^25.3.3",
     "dotenv": "^10.0.0"
   }

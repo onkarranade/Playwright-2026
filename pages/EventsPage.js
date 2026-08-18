@@ -1,7 +1,3 @@
-function escapeForRegex(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 export class EventsPage {
   /** @param {import('@playwright/test').Page} page */
   constructor(page) {
@@ -54,15 +50,15 @@ export class EventsPage {
   }
 
   async waitForSearchQuery(query) {
-    await this.page.waitForURL(new RegExp(`search=${escapeForRegex(query)}`));
+    await this.waitForQueryParam('search', query);
   }
 
   async waitForCityFilter(city) {
-    await this.page.waitForURL(new RegExp(`city=${escapeForRegex(city)}`));
+    await this.waitForQueryParam('city', city);
   }
 
   async waitForSearchAndCategory(query, category) {
-    await this.page.waitForURL(new RegExp(`search=${escapeForRegex(query)}`));
+    await this.waitForQueryParam('search', query);
     await this.clearFiltersButton.waitFor({ state: 'visible' });
   }
 
@@ -70,9 +66,17 @@ export class EventsPage {
     await this.eventCard(name).waitFor({ state: 'visible' });
   }
 
-  async openAddNewEventForm()
-  {
+  async openAddNewEventForm() {
     await this.addnewEventButton.click();
-    //await this.page.waitForURL(/\/events\/new$/);
+  }
+
+  async waitForQueryParam(paramName, expectedValue) {
+    await this.page.waitForFunction(
+      ([name, value]) => {
+        const current = new URL(window.location.href).searchParams.get(name);
+        return current === value;
+      },
+      [paramName, expectedValue],
+    );
   }
 }

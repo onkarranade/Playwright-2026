@@ -1,3 +1,14 @@
+function getFutureEventDateTime(daysAhead = 30) {
+  const date = new Date(Date.now() + daysAhead * 24 * 60 * 60 * 1000);
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
 export function createAdminEventData() {
   const suffix = Date.now().toString().slice(-6);
 
@@ -8,7 +19,7 @@ export function createAdminEventData() {
     category: 'Workshop',
     city: 'Bangalore',
     venue: 'Indiranagar, Bangalore',
-    eventDateTime: '2026-06-15T10:30',
+    eventDateTime: getFutureEventDateTime(),
     price: 250,
     totalSeats: 150,
   };
@@ -25,7 +36,7 @@ export function secondAdminEventData() {
     description: 'Football world cup event', 
     category: 'Sports',
     city: 'Mumbai',
-    eventDateTime: '2026-11-20T18:00',
+    eventDateTime: getFutureEventDateTime(45),
      price: 500,
      totalSeats: 200,
     

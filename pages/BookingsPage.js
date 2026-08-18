@@ -7,6 +7,7 @@ export class BookingsPage {
     this.noBookingsHeading = page.getByRole('heading', { name: 'No bookings yet' });
     this.bookingCancelledToast = page.getByText('Booking cancelled successfully');
     this.browseEventsLink = page.getByRole('button', { name: 'Browse Events' });
+    this.bookingCards = page.getByTestId('booking-card');
   }
 
   async visit() {
@@ -41,12 +42,31 @@ export class BookingsPage {
       await dialog.accept();
     });
 
-    await this.clearAllButton.click({ force: true });
-    await this.noBookingsHeading.waitFor({ state: 'visible' });
+    try {
+      await this.clearAllButton.click({ force: true });
+      await this.page.waitForFunction(() => !document.querySelector('[data-testid="booking-card"]'), null, {
+        timeout: 7_000,
+      });
+      await this.noBookingsHeading.waitFor({ state: 'visible' });
+    } catch {
+      await this.cancelAllBookingsIndividually();
+    }
   }
 
-  async browseEvents()
-  {
+  async browseEvents() {
     await this.browseEventsLink.click();
+  }
+
+  async cancelAllBookingsIndividually() {
+    while (await this.bookingCards.count()) {
+      const beforeCount = await this.bookingCards.count();
+      await this.bookingCards.first().getByRole('button', { name: 'Cancel Booking' }).click();
+      await this.page.waitForFunction(
+        (count) => document.querySelectorAll('[data-testid="booking-card"]').length < count,
+        beforeCount,
+      );
+    }
+
+    await this.noBookingsHeading.waitFor({ state: 'visible' });
   }
 }
