@@ -3,17 +3,30 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test",
-    "auth:refresh": "node -e \"const fs=require('fs');const p='tests/eventhub-auth.state.json';if(fs.existsSync(p)){fs.unlinkSync(p);console.log('Removed',p)}else{console.log('No state file to remove')}\"",
-    "auth:init": "npm run auth:refresh && npm test"
+    "fixtures:types": "node scripts/generate-fixture-types.mjs",
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:chrome": "playwright test --config=playwright.chrome.config.js --project=chrome",
+    "test:firefox": "playwright test --config=playwright.firefox.config.js --project=firefox",
+    "test:core": "playwright test tests/auth/login.spec.js tests/events/events-browse.spec.js tests/booking/booking-flow.spec.js --config=playwright.chrome.config.js --project=chrome",
+    "test:admin": "playwright test tests/admin/admin-events.spec.js --config=playwright.chrome.config.js --project=chrome --workers=1",
+    "test:api": "playwright test --project=api",
+    "test:ordered": "npm run test:core && npm run test:admin",
+    "test:headed": "playwright test --headed --config=playwright.chrome.config.js --project=chrome",
+    "auth:refresh": "node -e \"const fs=require('fs');const paths=['playwright/.auth/chrome.json','playwright/.auth/firefox.json','playwright/.auth/user.json'];for (const p of paths){if(fs.existsSync(p)){fs.unlinkSync(p);console.log('Removed',p)}}\"",
+    "auth:init": "playwright test tests/setup/auth.setup.js --config=playwright.chrome.config.js --project=setup-chrome",
+    "auth:init:firefox": "playwright test tests/setup/auth.setup.js --config=playwright.firefox.config.js --project=setup-firefox",
+    "report": "playwright show-report",
+    "test:local:firefox": "playwright test --config=playwright.firefox.config.js --project=firefox"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@playwright/cli": "^0.1.6",
-    "@playwright/test": "^1.59.1",
+    "@playwright/cli": "^0.1.15",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^25.3.3",
     "dotenv": "^10.0.0"
   }
