@@ -1,6 +1,6 @@
 # EventHub Progress Matrix
 
-Last updated: 2026-08-17
+Last updated: 2026-08-22
 
 ## Status Legend
 
@@ -41,6 +41,8 @@ Last updated: 2026-08-17
 | Admin | P1 | Required admin fields block empty event submission | Passing | tests/admin/admin-events.spec.js | Assert native HTML required validation on admin form |
 | Admin | P1 | Admin can view booking details from Manage Bookings | Passing | tests/admin/admin-bookings.spec.js | Asserts event, customer, and contact details in the View modal |
 | Admin | P1 | Admin can cancel a booking from Manage Bookings | Passing | tests/admin/admin-bookings.spec.js | Asserts row removal after confirming the Cancel modal |
+| Admin | P2 | Confirmed status filter shows matching booking rows | Passing | tests/admin/admin-bookings.spec.js | Verifies row visibility and action buttons under Confirmed filter |
+| Admin | P2 | Cancelled status filter shows empty state when no rows remain | Passing | tests/admin/admin-bookings.spec.js | Verifies filter state and empty-state rendering after cancellation |
 | API | P0 | Health endpoint reports API and database status | Passing | tests/api/eventhub.api.spec.js | Validates status, dbStatus, and timestamp |
 | API | P0 | Config endpoint returns public feature flags | Passing | tests/api/eventhub.api.spec.js | Verifies feature flag payload |
 | API | P0 | Auth login token can be reused with auth/me | Passing | tests/api/eventhub.api.spec.js | Verifies bearer token auth chain |
@@ -60,6 +62,8 @@ Last updated: 2026-08-17
 
 | Date | Command | Result |
 | --- | --- | --- |
+| 2026-08-22 | `npx playwright test --workers=1` | 36 passed |
+| 2026-08-22 | `npx playwright test tests/admin/admin-bookings.spec.js --workers=1` | 5 passed |
 | 2026-08-17 | `npx playwright test --workers=1` | 34 passed |
 | 2026-08-17 | `npx playwright test tests/admin/admin-bookings.spec.js --workers=1` | 3 passed |
 | 2026-08-17 | `npx playwright test tests/booking/booking-flow.spec.js --workers=1` | 8 passed |

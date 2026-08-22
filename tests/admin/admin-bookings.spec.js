@@ -15,6 +15,7 @@ test.describe('Admin bookings', () => {
     page,
     eventsPage,
     eventDetailsPage,
+    // @ts-ignore
     adminBookingsPage,
   }) => {
     const booking = createBookingDetails();
@@ -46,6 +47,7 @@ test.describe('Admin bookings', () => {
     page,
     eventsPage,
     eventDetailsPage,
+    // @ts-ignore
     adminBookingsPage,
   }) => {
     const booking = createBookingDetails();
@@ -65,4 +67,57 @@ test.describe('Admin bookings', () => {
 
     await expect(adminBookingsPage.bookingRow(booking.fullName)).toHaveCount(0);
   });
+
+  test('@regression @p2 confirmed status filter shows matching rows', async ({
+    eventsPage,
+    eventDetailsPage,
+    // @ts-ignore
+    adminBookingsPage,
+  }) => {
+    const booking = createBookingDetails();
+
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.waitForBookingForm();
+    await eventDetailsPage.fillBookingForm(booking);
+    await eventDetailsPage.confirmBooking();
+    await expect(eventDetailsPage.confirmationHeading).toBeVisible();
+
+    await adminBookingsPage.visit();
+    await adminBookingsPage.waitForLoaded();
+    await adminBookingsPage.filterByStatus('confirmed');
+
+    const row = adminBookingsPage.bookingRow(booking.fullName);
+    await expect(row).toBeVisible();
+    await expect(row).toContainText('confirmed');
+    await expect(row.getByRole('button', { name: 'View' })).toBeVisible();
+    await expect(row.getByRole('button', { name: 'Cancel', exact: true })).toBeVisible();
+  });
+
+  test('@regression @p2 cancelled status filter shows empty state when no rows remain', async ({
+    eventsPage,
+    eventDetailsPage,
+    // @ts-ignore
+    adminBookingsPage,
+  }) => {
+    const booking = createBookingDetails();
+
+    await eventsPage.visit();
+    await eventsPage.openEvent(featuredEvent.name);
+    await eventDetailsPage.waitForBookingForm();
+    await eventDetailsPage.fillBookingForm(booking);
+    await eventDetailsPage.confirmBooking();
+    await expect(eventDetailsPage.confirmationHeading).toBeVisible();
+
+    await adminBookingsPage.visit();
+    await adminBookingsPage.waitForLoaded();
+    await adminBookingsPage.cancelBooking(booking.fullName);
+
+    await adminBookingsPage.filterByStatus('cancelled');
+
+    await expect(adminBookingsPage.statusFilter).toHaveValue('cancelled');
+    await expect(adminBookingsPage.noBookingsHeading).toBeVisible();
+    await expect(adminBookingsPage.bookingRow(booking.fullName)).toHaveCount(0);
+  });
+ 
 });
